@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3em;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .icon {
+            position: absolute;
+            font-size: 2em;
+            animation: fadeInOut 3s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        #wishButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #wishContent {
+            display: none;
+            text-align: center;
+            color: white;
+            font-size: 1.5em;
+            margin-top: 20px;
+            line-height: 1.8; /* Thêm line-height để cách đều giữa các dòng */
+        }
+
+        #personalWishForm {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+            max-height: 300px;
+            overflow-y: auto; /* Cho phép kéo xuống */
+        }
+
+        #personalWishForm input, #personalWishForm button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #wishesList {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+            max-height: 200px;
+            overflow-y: auto; /* Cho phép kéo xuống */
+        }
+
+        .reactionButtons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reactionButtons button {
+            margin: 0 10px;
+            padding: 10px;
+            font-size: 2em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        .fallingIcon {
+            position: absolute;
+            font-size: 2em;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { top: -50px; opacity: 1; }
+            100% { top: 100vh; opacity: 0; }
+        }
+
+        #userWishDisplay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24); /* Gradient nhiều màu từ trái sang phải */
+            color: white; /* Chữ trắng để nổi bật trên gradient */
+            padding: 40px 30px 30px 30px; /* Tăng padding để to hơn */
+            border-radius: 15px; /* Góc bo đẹp hơn */
+            border: 2px solid #ff6b6b; /* Viền màu */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Bóng đổ */
+            font-size: 2em; /* Tăng font-size để to hơn */
+            text-align: center;
+            z-index: 10;
+            width: auto; /* Tự động theo nội dung */
+            max-width: 90%; /* Tăng max-width để to hơn */
+            height: auto; /* Tự động theo nội dung */
+        }
+
+        #closeUserWish {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white; /* Chữ trắng cho nút đóng để phù hợp với background mới */
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chúc Mừng Sinh Nhật!</h1>
+
+    <!-- Icons xung quanh -->
+    <div class="icon" style="top: 10%; left: 10%;">🎈</div>
+    <div class="icon" style="top: 20%; right: 10%;">🎂</div>
+    <div class="icon" style="bottom: 10%; left: 20%;">🎉</div>
+    <div class="icon" style="bottom: 20%; right: 20%;">🎁</div>
+    <!-- Thêm nhiều icon nếu cần -->
+
+    <button id="wishButton">Xem Lời Chúc</button>
+    <div id="wishContent"></div>
+
+    <!-- Form gửi lời chúc riêng -->
+    <div id="personalWishForm">
+        <h3>Gửi Lời Chúc Riêng</h3>
+        <input type="text" id="nameInput" placeholder="Nhập tên của bạn">
+        <input type="text" id="wishInput" placeholder="Nhập lời chúc của bạn">
+        <button id="submitWish">Gửi</button>
+    </div>
+
+    <!-- Danh sách lời chúc từ nhiều người -->
+    <div id="wishesList">
+        <h3>Lời Chúc Từ Mọi Người</h3>
+        <ul id="wishesUl"></ul>
+    </div>
+
+    <!-- Nút thả reactions - chỉ icon -->
+    <div class="reactionButtons">
+        <button id="heartBtn">❤️</button>
+        <button id="hahaBtn">😂</button>
+        <button id="likeBtn">👍</button>
+        <button id="loveBtn">😍</button>
+    </div>
+
+    <!-- Div hiển thị lời chúc từ người dùng -->
+    <div id="userWishDisplay">
+        <button id="closeUserWish">×</button>
+        <div id="userWishContent"></div>
+    </div>
+
+    <script>
+        // Mảng lời chúc mặc định - có thể thêm nhiều lời chúc hơn
+        const defaultWish = [
+            "Thêm một tuổi, không ồn ào hơn, chỉ bản lĩnh hơn. 🎉🎂",
+            "Biết mình muốn gì, biết nói “không” khi cần,biết chậm lại để đi xa🎈🎁",
+            "Chúc tôi đủ tỉnh táo để chọn đúng,đủ kiên nhẫn để theo đến cùng,đủ mạnh mẽ để không phải chứng minh với ai ngoài chính mình. 😊🎂",
+            "Tuổi mới không cần hoàn hảo,chỉ cần sống có giá trị, có mục tiêu, có tự trọng.và đáng tự hào về con người mình đang trở thành. ❤️🎉",
+            "Chúc mừng sinh nhật! Mong rằng năm nay tôi sẽ có nhiều may mắn và tiến bộ hơn nữa! 🌟🎁"
+        ];
+
+        // Nút xem lời chúc - hiển thị tất cả lời chúc theo thứ tự, mỗi dòng cách đều
+        document.getElementById('wishButton').addEventListener('click', function() {
+            const wishContent = document.getElementById('wishContent');
+            wishContent.innerHTML = ''; // Xóa nội dung cũ
+            wishContent.style.display = 'block';
+            defaultWish.forEach((wish, index) => {
+                const p = document.createElement('p');
+                p.style.margin = '10px 0'; // Cách đều giữa các dòng
+                wishContent.appendChild(p);
+                typeWriter(p, wish, 0);
+            });
+        });
+
+        // Hiệu ứng chữ chạy từ từ
+        function typeWriter(element, text, index) {
+            if (index < text.length) {
+                element.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(() => typeWriter(element, text, index), 100);
+            }
+        }
+
+        // Tải lời chúc từ localStorage khi trang load
+        function loadWishes() {
+            const wishes = JSON.parse(localStorage.getItem('birthdayWishes')) || [];
+            const wishesUl = document.getElementById('wishesUl');
+            wishes.forEach(wishData => {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.textContent = wishData.name;
+                button.style.background = 'none';
+                button.style.border = 'none';
+                button.style.cursor = 'pointer';
+                button.style.color = 'blue';
+                button.addEventListener('click', function() {
+                    showUserWish(wishData.wish);
+                });
+                li.appendChild(button);
+                wishesUl.appendChild(li);
+            });
+        }
+
+        // Gửi lời chúc riêng và lưu vào localStorage
+        document.getElementById('submitWish').addEventListener('click', function() {
+            const nameInput = document.getElementById('nameInput');
+            const wishInput = document.getElementById('wishInput');
+            const name = nameInput.value.trim();
+            const wish = wishInput.value.trim();
+            if (name && wish) {
+                const wishes = JSON.parse(localStorage.getItem('birthdayWishes')) || [];
+                wishes.push({ name, wish });
+                localStorage.setItem('birthdayWishes', JSON.stringify(wishes));
+
+                const wishesUl = document.getElementById('wishesUl');
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.textContent = name;
+                button.style.background = 'none';
+                button.style.border = 'none';
+                button.style.cursor = 'pointer';
+                button.style.color = 'blue';
+                button.addEventListener('click', function() {
+                    showUserWish(wish);
+                });
+                li.appendChild(button);
+                wishesUl.appendChild(li);
+                nameInput.value = '';
+                wishInput.value = '';
+            }
+        });
+
+        // Hiển thị lời chúc từ người dùng
+        function showUserWish(wish) {
+            const userWishDisplay = document.getElementById('userWishDisplay');
+            const userWishContent = document.getElementById('userWishContent');
+            userWishContent.textContent = wish;
+            userWishDisplay.style.display = 'block';
+        }
+
+        // Đóng lời chúc từ người dùng
+        document.getElementById('closeUserWish').addEventListener('click', function() {
+            document.getElementById('userWishDisplay').style.display = 'none';
+        });
+
+        // Thả reactions
+        function dropIcon(icon) {
+            const fallingIcon = document.createElement('div');
+            fallingIcon.className = 'fallingIcon';
+            fallingIcon.textContent = icon;
+            fallingIcon.style.left = Math.random() * 100 + '%';
+            document.body.appendChild(fallingIcon);
+            setTimeout(() => document.body.removeChild(fallingIcon), 3000);
+        }
+
+        document.getElementById('heartBtn').addEventListener('click', () => dropIcon('❤️'));
+        document.getElementById('hahaBtn').addEventListener('click', () => dropIcon('😂'));
+        document.getElementById('likeBtn').addEventListener('click', () => dropIcon('👍'));
+        document.getElementById('loveBtn').addEventListener('click', () => dropIcon('😍'));
+
+        // Chặn chuột phải
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Khi ấn F12 thì tải lại trang
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'F12') {
+                event.preventDefault(); // Ngăn mở DevTools
+                location.reload(); // Tải lại trang
+            }
+        });
+
+        // Load wishes khi DOM loaded
+        document.addEventListener('DOMContentLoaded', loadWishes);
+    </script>
+</body>
+</html>
