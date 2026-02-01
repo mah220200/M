@@ -184,7 +184,7 @@
 
     <!-- Form gửi lời chúc riêng -->
     <div id="personalWishForm">
-        <h3>Gửi Lời Chúc Riêng</h3>
+        <h3>Gửi Lời Chúc</h3>
         <input type="text" id="nameInput" placeholder="Nhập tên của bạn">
         <input type="text" id="wishInput" placeholder="Nhập lời chúc của bạn">
         <button id="submitWish">Gửi</button>
@@ -192,7 +192,7 @@
 
     <!-- Danh sách lời chúc từ nhiều người -->
     <div id="wishesList">
-        <h3>Lời Chúc Từ Mọi Người</h3>
+        <h3>Lời Chúc</h3>
         <ul id="wishesUl"></ul>
     </div>
 
@@ -220,6 +220,10 @@
             "Chúc mừng sinh nhật! Mong rằng năm nay tôi sẽ có nhiều may mắn và tiến bộ hơn nữa! 🌟🎁"
         ];
 
+        // URL của JSONBin để lưu trữ dữ liệu (thay bằng URL thực của bạn)
+        const jsonBinUrl = 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID'; // Thay YOUR_BIN_ID bằng ID của bin bạn tạo trên jsonbin.io
+        const apiKey = '$2a$10$YOUR_API_KEY'; // Thay YOUR_API_KEY bằng Master Key từ jsonbin.io
+
         // Nút xem lời chúc - hiển thị tất cả lời chúc theo thứ tự, mỗi dòng cách đều
         document.getElementById('wishButton').addEventListener('click', function() {
             const wishContent = document.getElementById('wishContent');
@@ -242,54 +246,85 @@
             }
         }
 
-        // Tải lời chúc từ localStorage khi trang load
-        function loadWishes() {
-            const wishes = JSON.parse(localStorage.getItem('birthdayWishes')) || [];
-            const wishesUl = document.getElementById('wishesUl');
-            wishes.forEach(wishData => {
-                const li = document.createElement('li');
-                li.className = 'wishItem'; // Thêm class để style
-                const folderIcon = document.createElement('span');
-                folderIcon.className = 'folderIcon';
-                folderIcon.textContent = '📁'; // Icon thư mục
-                const button = document.createElement('button');
-                button.textContent = wishData.name;
-                button.addEventListener('click', function() {
-                    showUserWish(wishData.wish);
+        // Tải lời chúc từ JSONBin khi trang load
+        async function loadWishes() {
+            try {
+                const response = await fetch(jsonBinUrl, {
+                    headers: {
+                        'X-Master-Key': apiKey
+                    }
                 });
-                li.appendChild(folderIcon);
-                li.appendChild(button);
-                wishesUl.appendChild(li);
-            });
+                const data = await response.json();
+                const wishes = data.record || [];
+                const wishesUl = document.getElementById('wishesUl');
+                wishes.forEach(wishData => {
+                    const li = document.createElement('li');
+                    li.className = 'wishItem'; // Thêm class để style
+                    const folderIcon = document.createElement('span');
+                    folderIcon.className = 'folderIcon';
+                    folderIcon.textContent = '📁'; // Icon thư mục
+                    const button = document.createElement('button');
+                    button.textContent = wishData.name;
+                    button.addEventListener('click', function() {
+                        showUserWish(wishData.wish);
+                    });
+                    li.appendChild(folderIcon);
+                    li.appendChild(button);
+                    wishesUl.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Lỗi khi tải lời chúc:', error);
+            }
         }
 
-        // Gửi lời chúc riêng và lưu vào localStorage
-        document.getElementById('submitWish').addEventListener('click', function() {
+        // Gửi lời chúc riêng và lưu vào JSONBin
+        document.getElementById('submitWish').addEventListener('click', async function() {
             const nameInput = document.getElementById('nameInput');
             const wishInput = document.getElementById('wishInput');
             const name = nameInput.value.trim();
             const wish = wishInput.value.trim();
             if (name && wish) {
-                const wishes = JSON.parse(localStorage.getItem('birthdayWishes')) || [];
-                wishes.push({ name, wish });
-                localStorage.setItem('birthdayWishes', JSON.stringify(wishes));
+                try {
+                    // Lấy dữ liệu hiện tại
+                    const response = await fetch(jsonBinUrl, {
+                        headers: {
+                            'X-Master-Key': apiKey
+                        }
+                    });
+                    const data = await response.json();
+                    const wishes = data.record || [];
+                    wishes.push({ name, wish });
 
-                const wishesUl = document.getElementById('wishesUl');
-                const li = document.createElement('li');
-                li.className = 'wishItem'; // Thêm class để style
-                const folderIcon = document.createElement('span');
-                folderIcon.className = 'folderIcon';
-                folderIcon.textContent = '📁'; // Icon thư mục
-                const button = document.createElement('button');
-                button.textContent = name;
-                button.addEventListener('click', function() {
-                    showUserWish(wish);
-                });
-                li.appendChild(folderIcon);
-                li.appendChild(button);
-                wishesUl.appendChild(li);
-                nameInput.value = '';
-                wishInput.value = '';
+                    // Cập nhật dữ liệu
+                    await fetch(jsonBinUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Master-Key': apiKey
+                        },
+                        body: JSON.stringify(wishes)
+                    });
+
+                    // Thêm vào UI
+                    const wishesUl = document.getElementById('wishesUl');
+                    const li = document.createElement('li');
+                    li.className = 'wishItem'; // Thêm class để style
+                    const folderIcon = document.createElement('span');
+                    folderIcon.className = 'folderIcon';
+                    folderIcon.textContent = '📁'; // Icon thư mục
+                    const button = document.createElement('button');
+                    button.textContent = name;
+                    button.addEventListener('click', function() {
+                        showUserWish(wish);
+                    });
+                    li.appendChild(folderIcon);
+                    li.appendChild(button);
+                    wishesUl.appendChild(li);
+                    nameInput.value = '';
+                    wishInput.value = '';
+                } catch (error) {
+                    console.error('Lỗi khi gửi lời chúc:', error);
+                }
             }
         });
 
