@@ -147,6 +147,26 @@
             font-size: 1.5em;
             cursor: pointer;
         }
+
+        /* Thêm style cho thư mục */
+        .wishItem {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .wishItem .folderIcon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .wishItem button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: blue;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
@@ -228,15 +248,16 @@
             const wishesUl = document.getElementById('wishesUl');
             wishes.forEach(wishData => {
                 const li = document.createElement('li');
+                li.className = 'wishItem'; // Thêm class để style
+                const folderIcon = document.createElement('span');
+                folderIcon.className = 'folderIcon';
+                folderIcon.textContent = '📁'; // Icon thư mục
                 const button = document.createElement('button');
                 button.textContent = wishData.name;
-                button.style.background = 'none';
-                button.style.border = 'none';
-                button.style.cursor = 'pointer';
-                button.style.color = 'blue';
                 button.addEventListener('click', function() {
                     showUserWish(wishData.wish);
                 });
+                li.appendChild(folderIcon);
                 li.appendChild(button);
                 wishesUl.appendChild(li);
             });
@@ -255,15 +276,16 @@
 
                 const wishesUl = document.getElementById('wishesUl');
                 const li = document.createElement('li');
+                li.className = 'wishItem'; // Thêm class để style
+                const folderIcon = document.createElement('span');
+                folderIcon.className = 'folderIcon';
+                folderIcon.textContent = '📁'; // Icon thư mục
                 const button = document.createElement('button');
                 button.textContent = name;
-                button.style.background = 'none';
-                button.style.border = 'none';
-                button.style.cursor = 'pointer';
-                button.style.color = 'blue';
                 button.addEventListener('click', function() {
                     showUserWish(wish);
                 });
+                li.appendChild(folderIcon);
                 li.appendChild(button);
                 wishesUl.appendChild(li);
                 nameInput.value = '';
