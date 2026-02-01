@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc Mừng Sinh Nhật!</title>
+    <title> Ngày của Mah 2/2 </title>
     <style>
         body {
             margin: 0;
@@ -62,35 +62,6 @@
             line-height: 1.8; /* Thêm line-height để cách đều giữa các dòng */
         }
 
-        #personalWishForm {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            width: 200px;
-            max-height: 300px;
-            overflow-y: auto; /* Cho phép kéo xuống */
-        }
-
-        #personalWishForm input, #personalWishForm button {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        #wishesList {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            width: 200px;
-            max-height: 200px;
-            overflow-y: auto; /* Cho phép kéo xuống */
-        }
-
         .reactionButtons {
             text-align: center;
             margin-top: 20px;
@@ -117,73 +88,8 @@
             100% { top: 100vh; opacity: 0; }
         }
 
-        #userWishDisplay {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(to right, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24); /* Gradient nhiều màu từ trái sang phải */
-            color: white; /* Chữ trắng để nổi bật trên gradient */
-            padding: 40px 30px 30px 30px; /* Tăng padding để to hơn */
-            border-radius: 15px; /* Góc bo đẹp hơn */
-            border: 2px solid #ff6b6b; /* Viền màu */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Bóng đổ */
-            font-size: 2em; /* Tăng font-size để to hơn */
-            text-align: center;
-            z-index: 10;
-            width: auto; /* Tự động theo nội dung */
-            max-width: 90%; /* Tăng max-width để to hơn */
-            height: auto; /* Tự động theo nội dung */
-        }
-
-        #closeUserWish {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: white; /* Chữ trắng cho nút đóng để phù hợp với background mới */
-            font-size: 1.5em;
-            cursor: pointer;
-        }
-
-        /* Thêm style cho thư mục */
-        .wishItem {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .wishItem .folderIcon {
-            font-size: 1.2em;
-            margin-right: 5px;
-        }
-
-        .wishItem button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: blue;
-            font-size: 1em;
-        }
-
         /* Responsive cho mobile */
         @media (max-width: 768px) {
-            #personalWishForm {
-                position: static; /* Thay đổi từ fixed để không che trên mobile */
-                margin: 10px auto;
-                width: 90%;
-                max-width: 300px;
-            }
-
-            #wishesList {
-                position: static; /* Thay đổi từ fixed để không che trên mobile */
-                margin: 10px auto;
-                width: 90%;
-                max-width: 300px;
-            }
-
             h1 {
                 font-size: 2em;
             }
@@ -200,35 +106,10 @@
                 font-size: 1.5em;
             }
         }
-
-        /* Nút refresh */
-        #refreshBtn {
-            background: #4ecdc4;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        /* Thông báo */
-        #notification {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: none;
-            z-index: 20;
-        }
     </style>
 </head>
 <body>
-    <h1>Chúc Mừng Sinh Nhật!</h1>
+    <h1>🎉 Tuổi 18 của tôi 🎉 </h1>
 
     <!-- Icons xung quanh -->
     <div class="icon" style="top: 10%; left: 10%;">🎈</div>
@@ -240,21 +121,6 @@
     <button id="wishButton">Xem Lời Chúc</button>
     <div id="wishContent"></div>
 
-    <!-- Form gửi lời chúc riêng -->
-    <div id="personalWishForm">
-        <h3>Gửi Lời Chúc</h3>
-        <input type="text" id="nameInput" placeholder="Nhập tên của bạn">
-        <input type="text" id="wishInput" placeholder="Nhập lời chúc của bạn">
-        <button id="submitWish">Gửi</button>
-    </div>
-
-    <!-- Danh sách lời chúc từ nhiều người -->
-    <div id="wishesList">
-        <h3>Lời Chúc</h3>
-        <button id="refreshBtn">Làm mới</button>
-        <ul id="wishesUl"></ul>
-    </div>
-
     <!-- Nút thả reactions - chỉ icon -->
     <div class="reactionButtons">
         <button id="heartBtn">❤️</button>
@@ -262,15 +128,6 @@
         <button id="likeBtn">👍</button>
         <button id="loveBtn">😍</button>
     </div>
-
-    <!-- Div hiển thị lời chúc từ người dùng -->
-    <div id="userWishDisplay">
-        <button id="closeUserWish">×</button>
-        <div id="userWishContent"></div>
-    </div>
-
-    <!-- Thông báo -->
-    <div id="notification"></div>
 
     <script>
         // Mảng lời chúc mặc định - có thể thêm nhiều lời chúc hơn
@@ -281,10 +138,6 @@
             "Tuổi mới không cần hoàn hảo,chỉ cần sống có giá trị, có mục tiêu, có tự trọng.và đáng tự hào về con người mình đang trở thành. ❤️🎉",
             "Chúc mừng sinh nhật! Mong rằng năm nay tôi sẽ có nhiều may mắn và tiến bộ hơn nữa! 🌟🎁"
         ];
-
-        // URL của JSONBin để lưu trữ dữ liệu (thay bằng URL thực của bạn)
-        const jsonBinUrl = 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID'; // Thay YOUR_BIN_ID bằng ID của bin bạn tạo trên jsonbin.io
-        const apiKey = '$2a$10$YOUR_API_KEY'; // Thay YOUR_API_KEY bằng Master Key từ jsonbin.io
 
         // Nút xem lời chúc - hiển thị tất cả lời chúc theo thứ tự, mỗi dòng cách đều
         document.getElementById('wishButton').addEventListener('click', function() {
@@ -306,120 +159,6 @@
                 index++;
                 setTimeout(() => typeWriter(element, text, index), 100);
             }
-        }
-
-        // Tải lời chúc từ JSONBin khi trang load
-        async function loadWishes() {
-            try {
-                const response = await fetch(jsonBinUrl, {
-                    headers: {
-                        'X-Master-Key': apiKey
-                    }
-                });
-                const data = await response.json();
-                const wishes = data.record || [];
-                const wishesUl = document.getElementById('wishesUl');
-                wishesUl.innerHTML = ''; // Xóa danh sách cũ
-                wishes.forEach(wishData => {
-                    const li = document.createElement('li');
-                    li.className = 'wishItem'; // Thêm class để style
-                    const folderIcon = document.createElement('span');
-                    folderIcon.className = 'folderIcon';
-                    folderIcon.textContent = '📁'; // Icon thư mục
-                    const button = document.createElement('button');
-                    button.textContent = wishData.name;
-                    button.addEventListener('click', function() {
-                        showUserWish(wishData.wish);
-                    });
-                    li.appendChild(folderIcon);
-                    li.appendChild(button);
-                    wishesUl.appendChild(li);
-                });
-            } catch (error) {
-                console.error('Lỗi khi tải lời chúc:', error);
-            }
-        }
-
-        // Gửi lời chúc riêng và lưu vào JSONBin
-        document.getElementById('submitWish').addEventListener('click', async function() {
-            const nameInput = document.getElementById('nameInput');
-            const wishInput = document.getElementById('wishInput');
-            const name = nameInput.value.trim();
-            const wish = wishInput.value.trim();
-            if (name && wish) {
-                try {
-                    // Lấy dữ liệu hiện tại
-                    const response = await fetch(jsonBinUrl, {
-                        headers: {
-                            'X-Master-Key': apiKey
-                        }
-                    });
-                    const data = await response.json();
-                    const wishes = data.record || [];
-                    wishes.push({ name, wish });
-
-                    // Cập nhật dữ liệu
-                    await fetch(jsonBinUrl, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Master-Key': apiKey
-                        },
-                        body: JSON.stringify(wishes)
-                    });
-
-                    // Thêm folder vào danh sách UI ngay lập tức
-                    const wishesUl = document.getElementById('wishesUl');
-                    const li = document.createElement('li');
-                    li.className = 'wishItem'; // Thêm class để style
-                    const folderIcon = document.createElement('span');
-                    folderIcon.className = 'folderIcon';
-                    folderIcon.textContent = '📁'; // Icon thư mục
-                    const button = document.createElement('button');
-                    button.textContent = name;
-                    button.addEventListener('click', function() {
-                        showUserWish(wish);
-                    });
-                    li.appendChild(folderIcon);
-                    li.appendChild(button);
-                    wishesUl.appendChild(li);
-
-                    // Hiển thị thông báo thành công
-                    showNotification('Lời chúc đã được gửi và lưu thành công!');
-
-                    nameInput.value = '';
-                    wishInput.value = '';
-                } catch (error) {
-                    console.error('Lỗi khi gửi lời chúc:', error);
-                    showNotification('Lỗi khi gửi lời chúc. Vui lòng thử lại.');
-                }
-            }
-        });
-
-        // Nút làm mới để tải lại lời chúc
-        document.getElementById('refreshBtn').addEventListener('click', loadWishes);
-
-        // Hiển thị lời chúc từ người dùng
-        function showUserWish(wish) {
-            const userWishDisplay = document.getElementById('userWishDisplay');
-            const userWishContent = document.getElementById('userWishContent');
-            userWishContent.textContent = wish;
-            userWishDisplay.style.display = 'block';
-        }
-
-        // Đóng lời chúc từ người dùng
-        document.getElementById('closeUserWish').addEventListener('click', function() {
-            document.getElementById('userWishDisplay').style.display = 'none';
-        });
-
-        // Hiển thị thông báo
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000); // Ẩn sau 3 giây
         }
 
         // Thả reactions
@@ -449,9 +188,6 @@
                 location.reload(); // Tải lại trang
             }
         });
-
-        // Load wishes khi DOM loaded
-        document.addEventListener('DOMContentLoaded', loadWishes);
     </script>
 </body>
 </html>
