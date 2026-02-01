@@ -167,6 +167,64 @@
             color: blue;
             font-size: 1em;
         }
+
+        /* Responsive cho mobile */
+        @media (max-width: 768px) {
+            #personalWishForm {
+                position: static; /* Thay đổi từ fixed để không che trên mobile */
+                margin: 10px auto;
+                width: 90%;
+                max-width: 300px;
+            }
+
+            #wishesList {
+                position: static; /* Thay đổi từ fixed để không che trên mobile */
+                margin: 10px auto;
+                width: 90%;
+                max-width: 300px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            #wishButton {
+                font-size: 1em;
+            }
+
+            #wishContent {
+                font-size: 1.2em;
+            }
+
+            .reactionButtons button {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Nút refresh */
+        #refreshBtn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        /* Thông báo */
+        #notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 20;
+        }
     </style>
 </head>
 <body>
@@ -193,6 +251,7 @@
     <!-- Danh sách lời chúc từ nhiều người -->
     <div id="wishesList">
         <h3>Lời Chúc</h3>
+        <button id="refreshBtn">Làm mới</button>
         <ul id="wishesUl"></ul>
     </div>
 
@@ -209,6 +268,9 @@
         <button id="closeUserWish">×</button>
         <div id="userWishContent"></div>
     </div>
+
+    <!-- Thông báo -->
+    <div id="notification"></div>
 
     <script>
         // Mảng lời chúc mặc định - có thể thêm nhiều lời chúc hơn
@@ -257,6 +319,7 @@
                 const data = await response.json();
                 const wishes = data.record || [];
                 const wishesUl = document.getElementById('wishesUl');
+                wishesUl.innerHTML = ''; // Xóa danh sách cũ
                 wishes.forEach(wishData => {
                     const li = document.createElement('li');
                     li.className = 'wishItem'; // Thêm class để style
@@ -305,7 +368,7 @@
                         body: JSON.stringify(wishes)
                     });
 
-                    // Thêm vào UI
+                    // Thêm folder vào danh sách UI ngay lập tức
                     const wishesUl = document.getElementById('wishesUl');
                     const li = document.createElement('li');
                     li.className = 'wishItem'; // Thêm class để style
@@ -320,13 +383,21 @@
                     li.appendChild(folderIcon);
                     li.appendChild(button);
                     wishesUl.appendChild(li);
+
+                    // Hiển thị thông báo thành công
+                    showNotification('Lời chúc đã được gửi và lưu thành công!');
+
                     nameInput.value = '';
                     wishInput.value = '';
                 } catch (error) {
                     console.error('Lỗi khi gửi lời chúc:', error);
+                    showNotification('Lỗi khi gửi lời chúc. Vui lòng thử lại.');
                 }
             }
         });
+
+        // Nút làm mới để tải lại lời chúc
+        document.getElementById('refreshBtn').addEventListener('click', loadWishes);
 
         // Hiển thị lời chúc từ người dùng
         function showUserWish(wish) {
@@ -340,6 +411,16 @@
         document.getElementById('closeUserWish').addEventListener('click', function() {
             document.getElementById('userWishDisplay').style.display = 'none';
         });
+
+        // Hiển thị thông báo
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000); // Ẩn sau 3 giây
+        }
 
         // Thả reactions
         function dropIcon(icon) {
